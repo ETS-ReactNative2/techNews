@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "techNews",
+    "slug": "techNews",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "techNews"
+}

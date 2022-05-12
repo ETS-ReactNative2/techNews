@@ -5,7 +5,12 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "splash": {
+      "image": "./assets/android/drawable-xxxhdpi/brainstem_logo_black_white.png",
+      "backgroundColor": "#FFFFFF",
+      "resizeMode": "contain"
+    }
   },
   "name": "techNews"
 }

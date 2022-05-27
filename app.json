@@ -7,7 +7,7 @@
       "**/*"
     ],
     "splash": {
-      "image": "./assets/android/drawable-xxxhdpi/brainstem_logo_black_white.png",
+      "image": "./assets/images/brainstem_logo_black_white.png",
       "backgroundColor": "#FFFFFF",
       "resizeMode": "contain"
     }

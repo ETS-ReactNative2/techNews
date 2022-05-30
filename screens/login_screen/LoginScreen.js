@@ -49,19 +49,28 @@ const LoginScreen = ({ navigation }) => {
           [email, password],
           (txn, { rows: { _array } }) => {
             if (_array.length >= 1) {
-              dispatch(setUser( ..._array ));
+              dispatch(
+                setUser({
+                  firstName: _array[0].first_name,
+                  lastName: _array[0].last_name,
+                  email: _array[0].email,
+                  mobile: _array[0].mobile,
+                })
+              );
               navigation.navigate("BottomNavigator");
             } else {
               Alert.alert("Incorrect Password", "Please, check and try again");
             }
-          }, 
+          },
           (txn, error) => {
             console.log("UserDb", error);
-            Alert.alert("Warning!", `${txn} ${error}`, [
-              { text: "Retry", onPress: () => {} },
-            ]);
+            Alert.alert(
+              "Warning!",
+              "No record found for your credential. Please, register a new account",
+              [{ text: "Retry", onPress: () => {} }]
+            );
           }
-        ); 
+        );
       });
     } catch (error) {
       console.log(error);

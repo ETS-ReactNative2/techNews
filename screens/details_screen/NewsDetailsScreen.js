@@ -8,6 +8,7 @@ import {ImageBackground } from 'react-native'
 
 
 const NewsDetailsScreen = ({route}) => {
+  {console.log("Logging route => ",  route.params.url)}
   return (
     <ImageBackground
       style={{ flex: 1}}
@@ -16,8 +17,7 @@ const NewsDetailsScreen = ({route}) => {
       <StatusBar backgroundColor="#f4511e" />
       <AutoHeightWebView
         style={{ width: Dimensions.get("window").width, marginTop: 0 }}
-        // onSizeUpdated={(size) => console.log(size.height)}
-        source={{ uri: /**"https://maxnagy.com/posts/pigeons/" */ route.params.url }}
+        source={{ uri: route.params.url }}
         scalesPageToFit={true}
         viewportContent={"width=device-width, user-scalable=no"}
       />

@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
   },
 
   loading: {
-    backgroundColor: "green",
+    width: 50, height: 150,
     tintColor: Colors.amber900,
     justifyContent: "center",
     alignItems: "center"
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
 
   title: {
     textAlign: "center",
-    padding: 20,
+    padding: 5,
     ...TextStyles.title,
   },
 

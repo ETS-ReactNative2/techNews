@@ -3,11 +3,9 @@ import React, { Suspense, useEffect, useState } from "react";
 import {
   View,
   Text,
-  Image,
   ImageBackground,
-  TextInput,
   FlatList,
-  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "../login_screen/LoginStyles";
@@ -16,62 +14,85 @@ import Loading from "./components/Loading";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getListOfNewsIds } from "../../app_store/listOfNewsIdsSlice";
-// import NewsItem from "./components/NewsItem";
-import {
-  getNewsItem,
-  getNewsObjectFromListOfIds,
-} from "../../app_store/newsSlice";
+import { getNewsItem } from "../../app_store/newsSlice";
 
 //lazy loading component
 const LazyNewsItem = React.lazy(() => import("./components/NewsItem"));
 
-const NewsScreen = () => {
+const NewsScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { listOfNewsIds } = useSelector((state) => state.listOfNewsIds);
-  const { news, newsLoading } = useSelector((state) => state.news);
+  const { news } = useSelector((state) => state.news);
+
+  //news pagination
+  const [pageSize, setPageSize] = useState(0);
 
   useEffect(() => {
     dispatch(getListOfNewsIds());
-    loadMoreNews();
-    console.log("STATE NEWS OBJECT", news);
+    let timedLoadMoreNews = setTimeout(() => {
+      loadMoreNews();
+    }, 3000);
+
+    return () => {
+      clearTimeout(timedLoadMoreNews);
+    };
   }, []);
 
   const loadMoreNews = async () => {
-    await listOfNewsIds.forEach((id) => {
-      dispatch(getNewsItem(id));
-    });
-    console.log("BATCHED NEWD OBJECTS", news);
-  ;
-  
-  // if (newsLoading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <ActivityIndicator size="large" style={styles.loader} />
-  //     </View>
-  //   );
-  // }
+    var i = listOfNewsIds.length - pageSize;
+    try {
+      if (i < 10) {
+        await listOfNewsIds.slice(i).map((id) => {
+          dispatch(getNewsItem(id));
+        });
+        setPageSize(pageSize + i);
+        return;
+      }
 
-  const itemToRender = ({ item, index }) => (
-    <View>
+      await listOfNewsIds.slice(pageSize, pageSize + 10).map((id) => {
+        dispatch(getNewsItem(id));
+        // console.log(news);
+      });
+      setPageSize(pageSize + 10);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  const itemToRender = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("Details", { url: item.url });
+      }}
+    >
       <Suspense fallback={<Loading />}>
-        <LazyNewsItem item={item} index={index} />
+        <LazyNewsItem item={item} />
       </Suspense>
-    </View>
+    </TouchableOpacity>
   );
 
-  const handleEmpty = () => {
+  const handleEmptyList = () => {
     return (
-      <Text style={styles.message}>
-        No access to data! Please, make sure your internet is active.
-      </Text>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={loadMoreNews}
+        style={{
+          backgroundColor: "black",
+          borderRadius: 100,
+          marginTop: 50,
+          marginHorizontal: "25%",
+        }}
+      >
+        <Text style={{ color: Colors.white, padding: 5, textAlign: "center" }}>
+          Please, check your network and tap me to reload
+        </Text>
+      </TouchableOpacity>
     );
   };
 
-  const header = () => (
-    <View>
-      <Text style={styles.title}> Updated News</Text>
-    </View>
-  );
+  const footer = () => {
+    return <Loading />;
+  };
 
   return (
     <ImageBackground
@@ -79,33 +100,21 @@ const NewsScreen = () => {
       source={require("../../assets/images/news_bg_gradient.png")}
     >
       <StatusBar backgroundColor="#f4511e" />
-      <View style={{ ...styles.row, ...styles.textInputCont }}>
-        <Image
-          style={styles.icon}
-          source={require("../../assets/images/brainstem_logo_black_white.png")}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Search news Item"
-          placeholderTextColor={Colors.amber900}
-          value=""
-        />
-      </View>
       <View>
-        <FlatList
-          data={news}
-          renderItem={itemToRender}
-          // keyExtractor={(item) => item.key}
-          // extraData={news}
-          // onEndReached={loadMoreNews}
-          ListHeaderComponent={header}
-          ListEmptyComponent={handleEmpty}
-          // maxToRenderPerBatch={10}
-          // onScroll={loadMoreNews}
-        />
+        <Text style={styles.title}> News</Text>
       </View>
+
+      <FlatList
+        data={news}
+        renderItem={itemToRender}
+        keyExtractor={(item) => item.key}
+        extraData={news}
+        onEndReachedThreshold={0.4}
+        onEndReached={loadMoreNews}
+        ListFooterComponent={footer}
+        ListEmptyComponent={handleEmptyList}
+      />
     </ImageBackground>
   );
 };
-
 export default NewsScreen;

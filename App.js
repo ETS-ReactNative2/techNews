@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import LoginScreen from "./screens/login_screen/LoginScreen";
+import NewsDetailsScreen from "./screens/details_screen/NewsDetailsScreen";
 import RegScreen from "./screens/registration_screen/RegScreen";
 import BottomNavigator from "./screens/shared_components/BottomNavigator";
 
@@ -13,7 +14,10 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
+        >
           <Stack.Screen
             name="Login"
             component={LoginScreen}

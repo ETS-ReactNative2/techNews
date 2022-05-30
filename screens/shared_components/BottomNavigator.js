@@ -5,6 +5,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 //tab screen imports
 import ProfileScreen from "../profile_screen/ProfileScreen";
 import NewsStackScreen from "./NewsStackNavigator";
+import NewsDetailsScreen from "../details_screen/NewsDetailsScreen";
+import NewsScreen from "../news_screen/NewsScreen";
 
 function BottomNavigator() {
   const Tab = createMaterialBottomTabNavigator();

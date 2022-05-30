@@ -31,6 +31,7 @@ const ProfileScreen = ({ navigation }) => {
           style={profileStyles.image}
           source={require("../../assets/images/devPassport.jpeg")}
         />
+        {/** Just for demonstration purpose */}
         <Text style={styles.message}>Tap the image to upload your picture</Text>
       </TouchableOpacity>
 
@@ -38,7 +39,7 @@ const ProfileScreen = ({ navigation }) => {
         <View style={profileStyles.card}>
           <Text style={profileStyles.label}>Name:</Text>
           <Text style={profileStyles.text}>
-            {users.first_name + " " + users.last_name}
+            {users.firstName + " " + users.lastName}
           </Text>
         </View>
 
@@ -51,7 +52,6 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={profileStyles.label}>Email:</Text>
           <Text style={profileStyles.text}>{users.email}</Text>
         </View>
-        {/** Just to beautify it with Log out button */}
         <TouchableOpacity
           onPress={() => {
             Alert.alert("LOGOUT WARNING", "Proceed to log out", [
@@ -59,11 +59,15 @@ const ProfileScreen = ({ navigation }) => {
                 text: "Confirm LogOut",
                 onPress: () => {
                   dispatch(logOutUser({}));
+                  navigation.navigate("Login");
                 },
               },
+              {
+                text: "Cancel",
+                onPress: () => {},
+              },
             ]);
-            console.log("LOGOUT MESSAGE", "You are logged Out");
-            navigation.navigate("Login");
+            // console.log("LOGOUT MESSAGE", "You are logged Out");
           }}
         >
           <Text

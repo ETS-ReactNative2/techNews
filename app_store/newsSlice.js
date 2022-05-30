@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
 import axios from "axios";
 
 const newsSlice = createSlice({
@@ -32,9 +31,10 @@ export const getNewsItem = createAsyncThunk("news/getNews", async (id) => {
     const response = await axios.get(
       "https://hacker-news.firebaseio.com/v0/item/" + id + ".json?print=pretty"
     );
-
+    var i = 0;
+    i++;
     const newsItem = {
-      key: response.data.id,
+      key: Math.random() * 1000,
       title: response.data.title,
       author: response.data.by,
       url: response.data.url,
@@ -46,18 +46,3 @@ export const getNewsItem = createAsyncThunk("news/getNews", async (id) => {
     console.log(error);
   }
 });
-
-export const getNewsObjectFromListOfIds = createAsyncThunk(
-  "",
-  async (listOfNewsId) => {
-    try {
-      const list = listOfNewsId.map((id) => {
-        getNewsItem(id);
-      });
-      console.log("Getting list of news Object", list);
-      return list;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-);
